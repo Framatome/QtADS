@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.10">
+  <GVL Name="GVL" Id="{e3330285-cffa-4779-85db-37f04fe46348}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+    tPassageOfTime      : TIME := TIME#0MS; // Keep track of the passage of time.
+    eGlobalExampleEnum  : EXAMPLE_ENUM := EXAMPLE_ENUM.Example0;       // Global example ENUM
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

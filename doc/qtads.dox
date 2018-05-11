@@ -1,0 +1,59 @@
+/* -*- mode: C++ ; c-file-style: "stroustrup" -*- *****************************
+* QtADS Library
+* Copyright (C) 2012-2018   Framatome, Inc.
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in
+* all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+*****************************************************************************/
+
+/*
+  This file contains NO source code, just some documentation for doxygen to
+  parse.
+*/
+
+/*!
+  \mainpage QtADS - Qt ADS integration library
+
+The QtADS library contains utility classes for integrating Qt with Beckhoff's <a href="http://www.beckhoff.com/english.asp?twincat/default.htm">TwinCAT</a> real-time software PLC system using <a href="https://github.com/Beckhoff/ADS">ADS</a>.
+
+  \section platforms Platforms
+
+  QtADS 1.x might be usable in all environments where you find
+  <a href="https://www.qt.io">Qt</a>.
+  It is compatible with Qt >= 4.7 and TwinCAT >= 2.9 (build 941).
+
+  \section downloads Downloads
+
+  For getting a development snapshot from the GIT repository:
+  \code git clone git@github.com:Framatome/QtADS.git \endcode
+
+  \section installonmainpage Installation
+ 
+  Have a look at the QtADS.pro project file. It is prepared for building
+  dynamic libraries in Win32 environments. 
+  If you don't know what to do with it, read the file INSTALL and/or 
+  Qt's
+  <a href="http://doc.qt.io">qmake</a> documentation. Once you have built the library you have to install
+  all files from the lib, include and doc directories.
+
+  \section support Support
+  - Email Don Bigler at don.bigler@framatome.com\n
+  
+  \section credits Credits:
+  \par Authors: 
+    Don C. Bigler, Ph.D. \<don.bigler@framatome.com\>
+*/

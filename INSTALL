@@ -1,0 +1,57 @@
+Introduction
+============
+
+QtADS uses qmake to build all its components and examples.
+qmake is part of a Qt distribution. 
+
+qmake reads project files, that contain the options and rules how to 
+build a certain project. A project file ends with the suffix "*.pro". 
+Files that end with the suffix "*.pri" are included by the project 
+files and contain definitions, that are common for several project files.
+
+QtADSconfig.pri and QtADSbuild.pri are read by all project files of the QtADS
+package. QtADSconfig.pri is also read by QtADS.prf, when building your
+application. So the first step is to edit the *.pri files to adjust 
+them to your needs.
+
+The subdirs template of qmake is known to be buggy when using spaces 
+in path names. So don't build QtADS below a path name with spaces.
+( Otherwise you might have to run qmake in all subdirs manually ).
+
+Documentation
+==========================
+
+QtADS includes a class documentation, that is available in the following formats:
+
+- Html files
+
+Building QtADS
+==========================
+
+The easiest way to build QtADS is from the command line - but if you insist on
+using an IDE don't forget the "make install" step.
+
+--------
+
+Start a Shell, where Qt is initialized.
+
+qmake qtads.pro
+make
+make install
+
+Don't forget to tell qmake where to find qtads.prf:
+qmake -set QMAKEFEATURES ...
+
+Using QtADS
+===========
+
+For building a QtADS application with qmake use the qtads.prf configuration features
+file, that has been installed by "make install". When qmake is able to find 
+it ( http://doc.qt.io/qt-5/qmake-advanced-usage.html#adding-new-configuration-features )
+you can simply add "CONFIG += QtADS" to your application project file.
+
+If you don't use qmake you have to add the include path to find the QtADS
+headers to your compiler flags and the QtADS library to your linker list.
+Don't forget to add QTADS_DLL to the compiler flags, when you work with QtADS-DLLs on Windows.
+
+Good luck !

@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.10">
+  <POU Name="MAIN" Id="{05db4cdf-c405-4a64-adc3-7c31687a3258}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	bFirstPass		: BOOL					:= TRUE;						// Is this the first pass?
+    eExampleEnum    : EXAMPLE_ENUM          := EXAMPLE_ENUM.Example0;       // Example ENUM
+	aExampleUINT    : ARRAY [0..2] OF UINT  := [0,32767,65535];             // Example UINT array
+    uiExample       : UINT                  := 3;                           // Example UINT 
+	aExampleUDINT   : ARRAY [0..2] OF UDINT := [0,2147483647,4294967295];   // Example UDINT array
+    udiExample      : UDINT                 := 4;                           // Example UDINT
+    aExampleSTRING  : ARRAY [0..2] OF STRING:= ['Example0','Example1','Example2'];  // Example STRING array
+    sExample        : STRING                := 'Default';                   // Example STRING
+    aExampleREAL    : ARRAY [0..2] OF REAL  := [-3.402823,0.0,3.402823];    // Example REAL array
+    rExample        : REAL                  := -1.0;                        // Example REAL
+    aExampleLREAL   : ARRAY [0..2] OF LREAL := [-1.7976931348623158,0.0,1.7976931348623158]; //Example LREAL array
+    lrExample       : LREAL                 := -1.0;                        // Example LREAL
+    aExampleINT     : ARRAY [0..2] OF INT   := [-32768,0,32767];            // Example INT array
+    iExample        : INT                   := 2;                           // Example INT
+    aExampleDINT    : ARRAY [0..2] OF DINT  := [-2147483648,0,2147483647];  // Example DINT array
+    diExample       : DINT                  := -5;                          // Example DINT
+    aExampleBOOL    : ARRAY [0..2] OF BOOL  := [TRUE,FALSE,TRUE];           // Example BOOL array
+    boolExample     : BOOL                  := FALSE;                       // Example BOOL
+    bExample        : BYTE                  := 0;                           // Example BYTE
+    dwExample       : DWORD                 := 4294967295;                  // Example DWORD
+    wExample        : WORD                  := 65535;                       // Example WORD
+    siExample       : SINT                  := -128;                        // Example SINT
+    usiExample      : USINT                 := 255;                         // Example USINT
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF bFirstPass THEN
+	bFirstPass := FALSE;
+	GVL.tPassageOfTime := TIME();
+ELSE
+	GVL.tPassageOfTime := TIME() - GVL.tPassageOfTime;
+END_IF;
+
+IF GVL.eGlobalExampleEnum <> eExampleEnum THEN
+    uiExample := aExampleUINT[GVL.eGlobalExampleEnum];
+    udiExample := aExampleUDINT[GVL.eGlobalExampleEnum];
+    sExample := aExampleSTRING[GVL.eGlobalExampleEnum];
+    rExample := aExampleREAL[GVL.eGlobalExampleEnum];
+    lrExample := aExampleLREAL[GVL.eGlobalExampleEnum];
+    iExample := aExampleINT[GVL.eGlobalExampleEnum];
+    diExample := aExampleDINT[GVL.eGlobalExampleEnum];
+    boolExample := aExampleBOOL[GVL.eGlobalExampleEnum];
+    bExample := bExample + 1;
+    dwExample := dwExample - 1;
+    wExample := wExample / 2;
+    siExample := siExample - 1;
+    usiExample := usiExample + 1;
+    GVL.eGlobalExampleEnum := eExampleEnum;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="28" Count="0" />
+      <LineId Id="76" Count="1" />
+      <LineId Id="30" Count="18" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,191 @@
+################################################################
+# QtADS Library
+# Copyright (C) 2012-2018   Framatome, Inc.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+################################################################
+
+include ( ./QtADSconfig.pri )
+include ( ./QtADSfunctions.pri )
+
+contains(QTADS_CONFIG, QtADSDll) {
+
+    DEFINES *= QTADS_DLL
+}
+
+# Try to find the ADS libraries automatically.
+# On Windows it will search for TwinCAT installations
+# using the registry.  Unix OS's will have to use the
+# open-source ADS library (https://github.com/Beckhoff/ADS)
+# and specify ADSPATH manually.
+
+!isEmpty(ADSPATH):!exists($${ADSPATH}) {
+    ADSPATH =
+}
+
+win32:contains(QTADS_CONFIG, QtADSTwinCAT3) {
+    DEFINES *= USE_TWINCAT
+
+    isEmpty(ADSPATH) {
+        ADSPATH = C:/TwinCAT3/
+        !exists($${ADSPATH}):ADSPATH =
+
+        isEmpty(ADSPATH) {
+            message( "Searching for TwinCAT3 32-bit" )
+            SYSTEM_CMD = reg query HKEY_LOCAL_MACHINE\\SOFTWARE\\Beckhoff\\TwinCAT3 /v "TwinCATDir"
+            system($${SYSTEM_CMD}) {
+                SYSTEM_RET = $$system($${SYSTEM_CMD})
+                FORLOOP = 3 4 5 6 7
+                for(i, FORLOOP):ADSPATH += $$member(SYSTEM_RET, $${i})
+            }
+        }
+
+        isEmpty(ADSPATH) {
+            message( "Searching for TwinCAT3 64-bit" )
+            SYSTEM_CMD = reg query HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Beckhoff\\TwinCAT3 /v "TwinCATDir"
+            system($${SYSTEM_CMD}) {
+                SYSTEM_RET = $$system($${SYSTEM_CMD})
+                FORLOOP = 3 4 5 6 7
+                for(i, FORLOOP):ADSPATH += $$member(SYSTEM_RET, $${i})
+            }
+        }
+
+        isEmpty(ADSPATH) {
+            error("This library requires an installation of TwinCAT3 which was not found. Install TwinCAT3 or specify ADSPATH manually.")
+        } else {
+
+            wince60Beckhoff_HMI_600-x86-msvc2005 {
+                message( "Building for TwinCAT on WinCE")
+                exists("$${ADSPATH}AdsApi/TcAdsDll/Ce/lib/x86/TcAdsDllCe.lib") {
+                    LIBS *= "$${ADSPATH}AdsApi/TcAdsDll/Ce/lib/x86/TcAdsDllCe.lib"
+                } else {
+                    error("Unable to locate ADSLib: $${ADSPATH}/AdsApi/TcAdsDllCe/lib/x86/TcAdsDllCe.lib")
+                }
+            } else {
+
+                contains(QMAKE_TARGET.arch, x86_64):{
+                    message( "Building for 64 bit TwinCAT3")
+                    exists("$${ADSPATH}AdsApi/TcAdsDll/x64/lib/TcAdsDll.lib") {
+                        LIBS *= "$${ADSPATH}AdsApi/TcAdsDll/x64/lib/TcAdsDll.lib"
+                    } else {
+                        error("Unable to locate ADSLib: $${ADSPATH}AdsApi/TcAdsDll/x64/lib/TcAdsDll.lib")
+                    }
+                }
+
+                contains(QMAKE_TARGET.arch, x86):{
+                    message( "Building for 32 bit TwinCAT3")
+                    exists("$${ADSPATH}AdsApi/TcAdsDll/Lib/TcAdsDll.lib") {
+                        LIBS *= "$${ADSPATH}AdsApi/TcAdsDll/Lib/TcAdsDll.lib"
+                    } else {
+                        error("Unable to locate ADSLib: $${ADSPATH}AdsApi/TcAdsDll/Lib/TcAdsDll.lib")
+                    }
+                }
+            }
+        }
+    }
+}
+
+win32:contains(QTADS_CONFIG, QtADSTwinCAT2) {
+    DEFINES *= USE_TWINCAT
+
+    isEmpty(ADSPATH) {
+        message( "Searching for TwinCAT2 32-bit" )
+        SYSTEM_CMD = reg query HKEY_LOCAL_MACHINE\\SOFTWARE\\Beckhoff\\TwinCAT /v "InstallationPath"
+        system($${SYSTEM_CMD}) {
+            SYSTEM_RET = $$system($${SYSTEM_CMD})
+            FORLOOP = 7 8 9 10 11 12 13 14 15 16
+            for(i, FORLOOP):ADSPATH += $$member(SYSTEM_RET, $${i})
+        }
+    }
+
+    isEmpty(ADSPATH) {
+        message( "Searching for TwinCAT2 64-bit" )
+        SYSTEM_CMD = reg query HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Beckhoff\\TwinCAT /v "InstallationPath"
+        system($${SYSTEM_CMD}) {
+            SYSTEM_RET = $$system($${SYSTEM_CMD})
+            FORLOOP = 3 4 5 6 7
+            for(i, FORLOOP):ADSPATH += $$member(SYSTEM_RET, $${i})
+        }
+    }
+
+    isEmpty(ADSPATH) {
+        error("This library requires an installation of TwinCAT2 which was not found. Install TwinCAT2 or specify ADSPATH manually.")
+    } else {
+        wince60Beckhoff_HMI_600-x86-msvc2005 {
+            message( "Building for TwinCAT on WinCE")
+            exists("$${ADSPATH}ADS Api/TcAdsDllCe/lib/x86/TcAdsDllCe.lib") {
+                LIBS *= "$${ADSPATH}ADS Api/TcAdsDllCe/lib/x86/TcAdsDllCe.lib"
+            } else {
+                error("Unable to locate ADSLib: $${ADSPATH}ADS Api/TcAdsDllCe/lib/x86/TcAdsDllCe.lib")
+            }
+        } else {
+            contains(QMAKE_TARGET.arch, x86_64):{
+                message( "Building for 64 bit TwinCAT2")
+                exists("$${ADSPATH}ADS Api/TcAdsDll/x64/lib/TcAdsDll.lib") {
+                    LIBS *= "$${ADSPATH}ADS Api/TcAdsDll/x64/lib/TcAdsDll.lib"
+                } else {
+                    error("Unable to locate ADSLib: $${ADSPATH}ADS Api/TcAdsDll/x64/lib/TcAdsDll.lib")
+                }
+            }
+
+            contains(QMAKE_TARGET.arch, x86):{
+                message( "Building for 32 bit TwinCAT2")
+                exists("$${ADSPATH}ADS Api/TcAdsDll/Lib/TcAdsDll.lib") {
+                    LIBS *= "$${ADSPATH}ADS Api/TcAdsDll/Lib/TcAdsDll.lib"
+                } else {
+                   error("Unable to locate ADSLib: $${ADSPATH}ADS Api/TcAdsDll/Lib/TcAdsDll.lib")
+                }
+            }
+        }
+    }
+}
+
+!contains(QTADS_CONFIG, QtADSDll):!contains(QTADS_CONFIG, QtADSTwinCAT2):!contains(QTADS_CONFIG, QtADSTwinCAT3) {
+
+    isEmpty(ADSPATH):error("This static library requires ADSLib and ADSPATH is not set.")
+
+    unix {
+        SYSTEM_RET = $$system(uname)
+        exists("$${ADSPATH}/AdsLib-$${SYSTEM_RET}.a") {
+            LIBS *= "$${ADSPATH}/AdsLib-$${SYSTEM_RET}.a"
+        } else {
+            error("Unable to locate ADSLib: $${ADSPATH}/AdsLib-$${SYSTEM_RET}.a")
+        }
+    } else {
+        exists("$${ADSPATH}/Release/AdsLib.lib"):release {
+            LIBS *= "$${ADSPATH}/Release/AdsLib.lib"
+        } else {
+            error("Unable to locate ADSLib: $${ADSPATH}/Release/AdsLib.lib")
+        }
+        exists("$${ADSPATH}/Debug/AdsLib.lib"):debug {
+            LIBS *= "$${ADSPATH}/Debug/AdsLib.lib"
+        }
+    }
+}
+
+contains(QTADS_CONFIG, QtADSFramework) {
+
+    INCLUDEPATH *= $${QTADS_INSTALL_LIBS}/QtADS.framework/Headers
+}
+else {
+
+    INCLUDEPATH *= $${QTADS_INSTALL_HEADERS}
+}
+
+qtadsAddLibrary($${QTADS_INSTALL_LIBS}, QtADS)
