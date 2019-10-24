@@ -26,18 +26,8 @@
 #pragma	pack( push, 1)
 ////////////////////////////////////////////////////////////////////////////////
 // ADS symbol information
-typedef struct
-{
-    uint32_t    entryLength;    // length of complete symbol entry
-    uint32_t    iGroup;         // indexGroup of symbol: input, output etc.
-    uint32_t    iOffs;          // indexOffset of symbol
-    uint32_t    size;           // size of symbol ( in bytes, 0 = bit )
-    uint32_t    dataType;       // adsDataType of symbol
-    uint32_t    flags;          // see above
-    uint16_t    nameLength;     // length of symbol name (excl. \0)
-    uint16_t    typeLength;     // length of type name (excl. \0)
-    uint16_t    commentLength;  // length of comment (excl. \0)
-} AdsSymbolEntry, *PAdsSymbolEntry, **PPAdsSymbolEntry;
+typedef AdsSymbolEntry*  PAdsSymbolEntry;
+typedef AdsSymbolEntry** PPAdsSymbolEntry;
 
 
 #define	PADSSYMBOLNAME(p)			((char*)(((PAdsSymbolEntry)p)+1))
